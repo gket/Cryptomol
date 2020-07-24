@@ -1,13 +1,23 @@
 package com.gk.cryptomol.ui.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gk.cryptomol.data.CoinItem
+import com.gk.cryptomol.repository.CoinRepository
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val repository: CoinRepository) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    var allCoins = MutableLiveData<List<CoinItem>>()
+    var searchResult = MutableLiveData<List<CoinItem>>()
+
+    fun getCoinList() = viewModelScope.launch {
+        allCoins.value = repository.getCoinList()
     }
-    val text: LiveData<String> = _text
+
+    fun getSearchResult(searchQuery : String?) = viewModelScope.launch {
+        searchResult.value = repository.getSearchResult(searchQuery)
+    }
+
 }

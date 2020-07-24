@@ -1,6 +1,22 @@
 <resources>
     <string name="app_name">Cryptomol</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_my_coins">My Coins</string>
+    <string name="text_cryptomol">CryptoMol</string>
+    <string name="text_search_query">Search coin…</string>
+    <string name="text_price_refresh">Coin price refresh interval</string>
+    <string name="text_add_favorite">Add To Favorite</string>
+    <string name="text_coin_added">Coin is already on your list</string>
+    <string name="text_added_favorite_list">Added</string>
+    <string name="text_sign_out">Sign Out</string>
+    <string name="text_sign_in_sign_up">Please Sign In/Sign Up for favorite</string>
+
+    <!-- Texts for firestore fields-->
+    <string name="text_coin_db_name">coinName</string>
+    <string name="text_coin_db_id">coinId</string>
+    <string name="text_coin_db_symbol">coinSymbol</string>
+    <string name="text_coin_db_userid">userId</string>
+    <string name="text_db_collection_fav">favorites</string>
+    <string name="text_current_price">Current Price</string>
+    <string name="text_price_change_daily">24H Change</string>
 </resources>

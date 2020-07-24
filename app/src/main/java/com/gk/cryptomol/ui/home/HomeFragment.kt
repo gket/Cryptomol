@@ -4,28 +4,83 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.gk.cryptomol.R
+import androidx.navigation.fragment.findNavController
+import com.gk.cryptomol.adapter.CoinAdapter
+import com.gk.cryptomol.databinding.FragmentHomeBinding
+import org.koin.android.ext.android.inject
+
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+    private val homeViewModel: HomeViewModel by inject()
+    lateinit var coinAdapter: CoinAdapter
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeProcess()
+        searchProcess()
+        homeViewModel.getCoinList()
+        coinAdapter = CoinAdapter()
+        binding.recyclerViewCoins.adapter = coinAdapter
+        coinAdapter.onCoinClicked = { coinId ->
+           // val bundle = bundleOf("coinId" to coinId)
+            //findNavController().navigate(R.id.action_navigation_home_to_navigation_coin_detail, bundle)
+            val action = HomeFragmentDirections.actionNavigationHomeToNavigationCoinDetail(coinId)
+            findNavController().navigate(action)
+        }
+    }
+
+
+    private fun getSearchResultFromDb(query: String?) {
+        var searchText = query
+        searchText = "%$searchText%"
+        homeViewModel.getSearchResult(searchText)
+    }
+
+    private fun observeProcess() {
+        homeViewModel.searchResult.observe(viewLifecycleOwner, Observer {
+            coinAdapter.setData(it)
+        })
+
+        homeViewModel.allCoins.observe(viewLifecycleOwner, Observer { coinItems ->
+            coinAdapter.setData(coinItems)
+        })
+    }
+
+    private fun searchProcess() {
+        binding.searchView.isFocusable = true;
+        binding.searchView.isFocusableInTouchMode = false
+        binding.searchView.requestFocusFromTouch();
+
+        binding.searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(queryString: String?): Boolean {
+                getSearchResultFromDb(queryString)
+                return false
+            }
+
+            override fun onQueryTextChange(queryString: String?): Boolean {
+                getSearchResultFromDb(queryString)
+                return false
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
