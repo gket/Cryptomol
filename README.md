@@ -37,7 +37,7 @@ Screenshots
 
 ![HomeFragment](screenshots/search.png "Search")
 ![CoinDetailFragment](screenshots/coin_detail.png "Coin Detail")
-![FavoriteFragment](screenshots/favorites.png "Favorites")
+![FavoriteFragment](screenshots/favorites.jpg "Favorites")
 
 Libraries Used
 --------------
